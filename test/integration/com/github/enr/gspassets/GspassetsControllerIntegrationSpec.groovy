@@ -12,27 +12,24 @@ class GspassetsControllerIntegrationSpec extends IntegrationSpec {
   
     GspassetsController controller
 
-    //def mimeUtility
-    
-    // see https://github.com/grails/grails-core:
-    // grails-plugin-mimetypes/src/test/groovy/org/codehaus/groovy/grails/web/mime/MimeUtilitySpec.groovy
+    /*
+     * see https://github.com/grails/grails-core:
+     * grails-plugin-mimetypes/src/test/groovy/org/codehaus/groovy/grails/web/mime/MimeUtilitySpec.groovy
+     */
     def setup() {
         controller = new GspassetsController()
         def ga = new DefaultGrailsApplication()
-        ga.config.grails.mime.types = [ html: ['text/html','application/xhtml+xml'],
-                  xml: ['text/xml', 'application/xml'],
-                  text: 'text/plain',
-                  js: 'text/javascript',
-                  rss: 'application/rss+xml',
-                  atom: 'application/atom+xml',
-                  css: 'text/css',
-                  csv: 'text/csv',
-                  all: '*/*',
-                  json: ['application/json','text/json'],
-                  form: 'application/x-www-form-urlencoded',
-                  multipartForm: 'multipart/form-data'
-                ]
-
+        ga.config.grails.mime.types = [ html : ['text/html','application/xhtml+xml'],
+                                        xml  : ['text/xml', 'application/xml'],
+                                        text : 'text/plain',
+                                        js   : 'text/javascript',
+                                        rss  : 'application/rss+xml',
+                                        atom : 'application/atom+xml',
+                                        css  : 'text/css',
+                                        csv  : 'text/csv',
+                                        all  : '*/*',
+                                        json : ['application/json','text/json']
+                                      ]
         final factory = new MimeTypesFactoryBean(grailsApplication: ga)
         factory.afterPropertiesSet()
         def mimeTypes = factory.getObject()

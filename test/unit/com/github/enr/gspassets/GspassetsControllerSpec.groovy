@@ -16,19 +16,10 @@ class GspassetsControllerSpec extends Specification {
     
     def "should solve view from extension"() {
         given:
-            /*
-            def mimeUtilityControl = mockFor(MimeUtility)
-            mimeUtilityControl.demand.getMimeTypeForExtension(1..1) { String ext -> 
-                println "__ ext = ${ext}"
-                return mimeTypes[ext]
-            }
-            controller.request.forwardURI = "test_01.${extension}"
-            */
             controller.params.assetId = "test_01.${extension}"
         and:
             controller.serve()
         expect:
-            //response.contentType == "${response_content_type};charset=utf-8"
             view == "/gspassets/test_01.${extension}"
         where:
             extension         | response_content_type
@@ -67,7 +58,6 @@ class GspassetsControllerSpec extends Specification {
         where:
             request_format    | response_content_type
             'unknown'         | 'text/plain'
-
     }
     
     def "should serve html content type for empty request format"() {
