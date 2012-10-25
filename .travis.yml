@@ -8,8 +8,6 @@ jdk:
     - oraclejdk7
 
 before_install:
-    - curl -s get.gvmtool.net | bash
-    - source "$HOME/.gvm/bin/gvm-init.sh"
     - gvm install grails 2.1.1
     - gvm use grails 2.1.1
 
