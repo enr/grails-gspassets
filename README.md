@@ -1,6 +1,8 @@
 Gsp assets plugin
 =================
 
+[![Build Status](https://secure.travis-ci.org/enr/grails-gspassets.png?branch=master)](http://travis-ci.org/enr/grails-gspassets)
+
 Allows the usage of Grails GSP views to serve javascript, css and other types of file, so you can use GSP tags and Groovy in your resources.
 
 
