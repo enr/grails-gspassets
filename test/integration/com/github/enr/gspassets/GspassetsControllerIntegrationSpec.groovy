@@ -67,10 +67,10 @@ class GspassetsControllerIntegrationSpec extends IntegrationSpec {
             controller.modelAndView.viewName == "/gspassets/test_02"
         where:
             request_format    | response_content_type
-            'html'            | '[text/html, application/xhtml+xml]'
+            'html'            | 'text/html'
             'js'              | 'text/javascript'
             'css'             | 'text/css'
-            'json'            | '[application/json, text/json]'
+            'json'            | 'application/json'
     }
       
     def "should serve assets in subdirectories"() {
@@ -82,5 +82,15 @@ class GspassetsControllerIntegrationSpec extends IntegrationSpec {
         then:
             controller.response.contentType == "text/css;charset=utf-8"
             controller.modelAndView.viewName == '/gspassets/sub/test_03.css'
+    }
+    
+      
+    def "should throw 404 if assetId is missing"() {
+        given:
+            controller.params.assetId = ''
+        when:
+            controller.serve()
+        then:
+            controller.response.status == 404
     }
 }

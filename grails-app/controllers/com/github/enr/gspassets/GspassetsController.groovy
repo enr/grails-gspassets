@@ -14,15 +14,15 @@ class GspassetsController {
 
     def serve() {
         def assetId = params.assetId
+        if (!assetId) {
+            response.status = 404
+            return
+        }
         def uri = request.forwardURI
         def mimeFileExtensions = grailsApplication.config.grails.mime.file.extensions
         def mimeTypes = grailsApplication.config.grails.mime.types
-        def contentType = contentTypeForUri(uri) ?: mimeTypes[request.format]
+        def contentType = contentTypeForUri(uri) ?: toContentType(mimeTypes[request.format])
         contentType = contentType ?: DEFAULT_MIME_TYPE
-        if (!assetId) {
-            //response.status = 404
-            return
-        }
         render view:assetId, contentType:contentType // NOT YET IMPLEMENTED, model:params
     }
     
@@ -32,6 +32,13 @@ class GspassetsController {
             return mimeType.name
         }
         return null
+    }
+    
+    private String toContentType(mime) {
+        if (mime instanceof List && mime.size() > 0) {
+            return mime[0]
+        }
+        return mime ? "${mime}" : ''
     }
 
 }
