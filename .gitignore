@@ -1,3 +1,5 @@
 stacktrace.log
 /target
 /plugin.xml
+/grails-gspassets-*.zip
+/web-app

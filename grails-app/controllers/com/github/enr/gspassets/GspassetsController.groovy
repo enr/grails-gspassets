@@ -19,7 +19,7 @@ class GspassetsController {
             return
         }
         def uri = request.forwardURI
-        def mimeFileExtensions = grailsApplication.config.grails.mime.file.extensions
+        //def mimeFileExtensions = grailsApplication.config.grails.mime.file.extensions
         def mimeTypes = grailsApplication.config.grails.mime.types
         def contentType = contentTypeForUri(uri) ?: toContentType(mimeTypes[request.format])
         contentType = contentType ?: DEFAULT_MIME_TYPE
