@@ -84,7 +84,6 @@ class GspassetsControllerIntegrationSpec extends IntegrationSpec {
             controller.modelAndView.viewName == '/gspassets/sub/test_03.css'
     }
     
-      
     def "should throw 404 if assetId is missing"() {
         given:
             controller.params.assetId = ''

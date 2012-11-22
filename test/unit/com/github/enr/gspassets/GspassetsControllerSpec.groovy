@@ -8,7 +8,9 @@ import org.codehaus.groovy.grails.web.mime.MimeUtility
 @TestFor(GspassetsController)
 class GspassetsControllerSpec extends Specification {
 
-    def mimeTypes = [html:'text/html', xml:'text/xml', text:'text/plain', js:'text/javascript', css:'text/css', all:'*/*', json:'application/json']
+    def mimeTypes = [   html:'text/html', xml:'text/xml', text:'text/plain',
+                        js:'text/javascript', css:'text/css', all:'*/*',
+                        json:'application/json']
 
     def setup() {
         controller.grailsApplication.config.grails.mime.types = mimeTypes
