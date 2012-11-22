@@ -7,4 +7,7 @@ jdk:
     - oraclejdk6
     - oraclejdk7
 
+before_install:
+     - chmod +x grailsw
+
 script: ./grailsw test-app
