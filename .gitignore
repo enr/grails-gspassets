@@ -3,3 +3,5 @@ stacktrace.log
 /plugin.xml
 /grails-gspassets-*.zip
 /web-app
+/grails-app/conf/UrlMappings.groovy
+grails-app/i18n
