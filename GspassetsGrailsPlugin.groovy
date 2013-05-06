@@ -12,4 +12,5 @@ Allows the usage of Grails GSP views to serve javascript, css and other types of
     def documentation = "https://github.com/enr/grails-gspassets"
     def license = 'APACHE'
     def scm = [ url: 'https://github.com/enr/grails-gspassets' ]
+    def issueManagement = [system: 'GitHub', url: 'https://github.com/enr/grails-gspassets/issues']
 }
