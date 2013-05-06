@@ -21,7 +21,7 @@ Create your views in `grails-app/views/gspassets`.
 
 You can use a 2 dots extension (eg `.css.gsp`) to have file names ending in the canonical manner.
 
-A sample view, for a dynamic css file named dynamic.css.gsp:
+A sample view, for a dynamic css file named dynamic.css.gsp using the "famfamfam" tag library:
 
 ```css
     span.my-class {
@@ -36,4 +36,4 @@ Now you can include the file:
     <link rel="stylesheet" href="${createLink( uri:'/assets/dynamic.css' )}"/>
 ```
 
-The response contentType is guessed from extension (so `css` in the example above), otherwise will be set based on the request.format (which Grails defaults to html) or will be text plain for unknown types.
+The response contentType is guessed from extension (so `css` in the example above), otherwise will be set based on the `request.format` (which Grails defaults to html) or will be text plain for unknown types.
