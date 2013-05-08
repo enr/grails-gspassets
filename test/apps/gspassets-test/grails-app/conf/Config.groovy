@@ -89,3 +89,6 @@ log4j = {
            'org.hibernate',
            'net.sf.ehcache.hibernate'
 }
+
+// one of: all, atom, css, csv, html, js, json, rss, text, xml
+grails.plugins.gspassets.defaultResponse = 'html'

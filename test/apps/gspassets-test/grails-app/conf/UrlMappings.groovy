@@ -7,6 +7,17 @@ class UrlMappings {
 			}
 		}
 
+        "/assets/${assetId}**" {
+            controller = 'gspassets'
+            action = 'serve'
+            plugin = 'gspassets'
+        }
+        "/page/${assetId}**" {
+            controller = 'gspassets'
+            action = 'serve'
+            plugin = 'gspassets'
+        }
+
 		"/"(view:"/index")
 		"500"(view:'/error')
 	}

@@ -5,11 +5,11 @@ import org.codehaus.groovy.grails.web.mime.MimeType
 import org.codehaus.groovy.grails.web.mime.MimeUtility
 
 class GspassetsController {
-
+    
+    private static final String DEFAULT_RESPONSE = 'text'
+    //private static final String DEFAULT_MIME_TYPE = 'text/plain'
+    
     MimeUtility grailsMimeUtility
-    
-    private static final String DEFAULT_MIME_TYPE = 'text/plain'
-    
     def grailsApplication
 
     def serve() {
@@ -18,12 +18,25 @@ class GspassetsController {
             response.status = 404
             return
         }
+        def defaultResponse = grailsApplication.config?.grails?.plugins?.gspassets?.defaultResponse ?: DEFAULT_RESPONSE
         def uri = request.forwardURI
-        //def mimeFileExtensions = grailsApplication.config.grails.mime.file.extensions
-        def mimeTypes = grailsApplication.config.grails.mime.types
-        def contentType = contentTypeForUri(uri) ?: toContentType(mimeTypes[request.format])
-        contentType = contentType ?: DEFAULT_MIME_TYPE
+        def contentType = resolveContentType(uri, request.format, defaultResponse)
         render view:assetId, contentType:contentType // NOT YET IMPLEMENTED, model:params
+    }
+
+    private String resolveContentType(uri, requestFormat, defaultResponse) {
+        def ct = contentTypeForUri(uri)
+        if (ct != null) {
+            return ct
+        }
+        def mimeTypes = grailsApplication.config.grails.mime.types
+        if (requestFormat != null) {
+            ct = mimeTypes[requestFormat]
+            if (ct != null) {
+                return toContentType(ct)
+            }
+        }
+        return toContentType(mimeTypes[defaultResponse])
     }
     
     private String contentTypeForUri(uri) {
