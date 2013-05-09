@@ -1,10 +1,11 @@
 package com.github.enr.gspassets
 
 import grails.test.mixin.TestFor
-import spock.lang.Specification
+import spock.lang.*
 
 import org.codehaus.groovy.grails.web.mime.MimeUtility
 
+@Unroll
 @TestFor(GspassetsController)
 class GspassetsControllerSpec extends Specification {
 
@@ -15,8 +16,8 @@ class GspassetsControllerSpec extends Specification {
     def setup() {
         controller.grailsApplication.config.grails.mime.types = mimeTypes
     }
-    
-    def "should solve view from extension"() {
+
+    def "should set the correct content type (#response_content_type) for extension #extension"() {
         given:
             controller.params.assetId = "test_01.${extension}"
         and:
@@ -31,7 +32,7 @@ class GspassetsControllerSpec extends Specification {
             'json'            | 'application/json'
     }
     
-    def "should serve the correct content type for known request formats"() {
+    def "should set the correct content type (#response_content_type) for known request format #request_format"() {
         given:
             request.format = request_format
             controller.params.assetId = 'test_02'
@@ -75,6 +76,26 @@ class GspassetsControllerSpec extends Specification {
             request_format    | response_content_type
             null              | 'text/html'
             ''                | 'text/html'
+    }
+
+    def "#asset_id : should serve #response_content_type"() {
+        given:
+            request.format = request_format
+            request.forwardURI = "${asset_id}${ext}"
+            controller.params.assetId = asset_id
+            controller.defaultResponse = default_response
+            controller.skipRequestFormatAll = skip_request_all
+        and:
+            controller.serve()
+        expect:
+            response.contentType == "${response_content_type};charset=utf-8"
+            view == "/gspassets/${asset_id}"
+        where:
+            request_format | skip_request_all | default_response   | response_content_type | asset_id | ext
+            'all'          | true             | 'html'             | 'text/html'           | '01'     | ''
+            'all'          | false            | 'html'             | '*/*'                 | '02'     | ''
+            'all'          | true             | null               | 'text/plain'          | '03'     | ''
+            'all'          | false            | null               | '*/*'                 | '04'     | ''
     }
 }
 

@@ -5,3 +5,4 @@ stacktrace.log
 /web-app
 /grails-app/conf/UrlMappings.groovy
 grails-app/i18n
+test/apps/gspassets-test/target/

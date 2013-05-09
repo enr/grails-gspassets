@@ -92,3 +92,5 @@ log4j = {
 
 // one of: all, atom, css, csv, html, js, json, rss, text, xml
 grails.plugins.gspassets.defaultResponse = 'html'
+// if true, requests with format "all" (if no extension is given to the assetId) will be served as "defaultResponse"
+grails.plugins.gspassets.skipRequestFormatAll = true

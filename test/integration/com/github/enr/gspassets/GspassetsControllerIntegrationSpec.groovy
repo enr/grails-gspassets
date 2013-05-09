@@ -8,6 +8,7 @@ import org.codehaus.groovy.grails.commons.DefaultGrailsApplication
 import org.codehaus.groovy.grails.plugins.web.mimes.MimeTypesFactoryBean
 import org.codehaus.groovy.grails.web.mime.DefaultMimeUtility
 
+@Unroll
 class GspassetsControllerIntegrationSpec extends IntegrationSpec {
   
     GspassetsController controller
@@ -91,5 +92,27 @@ class GspassetsControllerIntegrationSpec extends IntegrationSpec {
             controller.serve()
         then:
             controller.response.status == 404
+    }
+
+    def "#asset_id : should serve #response_content_type"() {
+        given:
+            controller.request.format = request_format
+            controller.request.forwardURI = "${asset_id}${ext}"
+            controller.params.assetId = asset_id
+            controller.defaultResponse = default_response
+            controller.skipRequestFormatAll = skip_request_all
+        and:
+            controller.serve()
+        expect:
+            controller.response.contentType == "${response_content_type};charset=utf-8"
+            controller.modelAndView.viewName == "/gspassets/${asset_id}"
+        where:
+            request_format | skip_request_all | default_response   | response_content_type | asset_id | ext
+            'all'          | true             | 'html'             | 'text/html'           | '01'     | ''
+            'all'          | false            | 'html'             | '*/*'                 | '02'     | ''
+            'all'          | true             | null               | 'text/plain'          | '03'     | ''
+            'all'          | false            | null               | '*/*'                 | '04'     | ''
+            'all'          | true             | 'html'             | 'text/css'            | '05'     | '.css'
+            'all'          | false            | 'html'             | 'text/css'            | '06'     | '.css'
     }
 }

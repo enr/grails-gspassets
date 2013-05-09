@@ -3,24 +3,33 @@ package com.github.enr.gspassets
 import org.apache.commons.io.FilenameUtils
 import org.codehaus.groovy.grails.web.mime.MimeType
 import org.codehaus.groovy.grails.web.mime.MimeUtility
+import org.springframework.beans.factory.InitializingBean
 
-class GspassetsController {
+class GspassetsController implements InitializingBean {
     
     private static final String DEFAULT_RESPONSE = 'text'
-    //private static final String DEFAULT_MIME_TYPE = 'text/plain'
+    private static final String DEFAULT_MIME_TYPE = 'text/plain'
     
     MimeUtility grailsMimeUtility
     def grailsApplication
 
+    String defaultResponse
+    boolean skipRequestFormatAll
+
+    public void afterPropertiesSet() {
+        defaultResponse = grailsApplication.config?.grails?.plugins?.gspassets?.defaultResponse ?: DEFAULT_RESPONSE
+        skipRequestFormatAll = grailsApplication.config?.grails?.plugins?.gspassets?.skipRequestFormatAll ?: false
+    }
+
     def serve() {
+        println ""
         def assetId = params.assetId
         if (!assetId) {
             response.status = 404
             return
         }
-        def defaultResponse = grailsApplication.config?.grails?.plugins?.gspassets?.defaultResponse ?: DEFAULT_RESPONSE
-        def uri = request.forwardURI
-        def contentType = resolveContentType(uri, request.format, defaultResponse)
+        def requestFormat = (skipRequestFormatAll && request.format == 'all') ? '' : request.format
+        def contentType = resolveContentType(request.forwardURI, requestFormat, defaultResponse)
         render view:assetId, contentType:contentType // NOT YET IMPLEMENTED, model:params
     }
 
@@ -36,7 +45,7 @@ class GspassetsController {
                 return toContentType(ct)
             }
         }
-        return toContentType(mimeTypes[defaultResponse])
+        return toContentType(mimeTypes[defaultResponse]) ?: DEFAULT_MIME_TYPE
     }
     
     private String contentTypeForUri(uri) {

@@ -13,9 +13,11 @@ Map gspassets controller in your UrlMappings file:
 
 ```groovy
     "/assets/$assetId**"(controller:'gspassets', action:'serve')
+    // you can add multiple mappings
+    "/staticpages/$assetId**"(controller:'gspassets', action:'serve')
 ```
 
-You can use the url you want (in this case `/assets`), but you have to register the `assetId` part.
+You can use the base path you want (in this case `/assets` and `/staticpages`), but you have to register the `assetId` part.
 
 Create your views in `grails-app/views/gspassets`.
 
@@ -33,7 +35,29 @@ A sample view, for a dynamic css file named dynamic.css.gsp using the "famfamfam
 Now you can include the file:
 
 ```html
-    <link rel="stylesheet" href="${createLink( uri:'/assets/dynamic.css' )}"/>
+    <link rel="stylesheet" href="${request.contextPath}/assets/mydynamicstyle.css"/>
 ```
 
-The response contentType is guessed from extension (so `css` in the example above), otherwise will be set based on the `request.format` (which Grails defaults to html) or will be text plain for unknown types.
+The response contentType resolved in this way:
+
+- if the requested asset has a known extension the content type will be the default for that extension.
+  Content types are taken from the Grails configuration `grails.mime.types`.
+  So, the request for `/assets/mystyle.css` will be resolved as the view `gspassets/mystyle.css.gsp` with content type `text/css`
+  
+- if the asset has no extension (or an unknown one) the content type will be the type specified in `request.format` (if this is other than "all")
+
+- if `request.format` is "all" and the configuration data `skipRequestFormatAll` is set to false, content type will be `"*/*"`
+
+- if `grails.plugins.gspassets.defaultResponse` is set, content type will be the default for that key in the Grails configuration `grails.mime.types`.
+
+- finally, if none of the above conditions are verified, content type will default to `"text/plain"`
+
+
+Configuration
+-------------
+
+Available configuration keys:
+
+- `grails.plugins.gspassets.defaultResponse` (string): one of: all, atom, css, csv, html, js, json, rss, text, xml
+
+- `grails.plugins.gspassets.skipRequestFormatAll` (boolean): if true, requests with format "all" (if no extension is given to the assetId) will be served as "defaultResponse"
