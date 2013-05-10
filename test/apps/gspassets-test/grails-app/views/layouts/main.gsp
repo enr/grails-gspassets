@@ -14,8 +14,8 @@
 		<link rel="apple-touch-icon" sizes="114x114" href="${resource(dir: 'images', file: 'apple-touch-icon-retina.png')}">
 		<link rel="stylesheet" href="${resource(dir: 'css', file: 'main.css')}" type="text/css">
 		<link rel="stylesheet" href="${resource(dir: 'css', file: 'mobile.css')}" type="text/css">
-		<link rel="stylesheet" href="${request.contextPath}/assets/simplestyle.css"/>
-		<script type="text/javascript" src="${request.contextPath}/assets/simplejavascript.js" ></script>
+		<link rel="stylesheet" href="${request.contextPath}/assets/simplestyle.css?_g_c=33"/>
+		<script type="text/javascript" src="${request.contextPath}/assets/simplejavascript.js?_g_mymessage=Hello" ></script>
 		<g:layoutHead/>
 		<r:layoutResources />
 	</head>

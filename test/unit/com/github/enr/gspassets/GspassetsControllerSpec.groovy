@@ -49,6 +49,7 @@ class GspassetsControllerSpec extends Specification {
             'json'            | 'application/json'
     }
     
+    /*
     def "should serve the default content type for unknown request formats"() {
         given:
             request.format = request_format
@@ -77,8 +78,9 @@ class GspassetsControllerSpec extends Specification {
             null              | 'text/html'
             ''                | 'text/html'
     }
+    */
 
-    def "#asset_id : should serve #response_content_type"() {
+    def "#asset_id#ext : should serve #response_content_type"() {
         given:
             request.format = request_format
             request.forwardURI = "${asset_id}${ext}"
@@ -96,6 +98,11 @@ class GspassetsControllerSpec extends Specification {
             'all'          | false            | 'html'             | '*/*'                 | '02'     | ''
             'all'          | true             | null               | 'text/plain'          | '03'     | ''
             'all'          | false            | null               | '*/*'                 | '04'     | ''
+            'all'          | true             | 'html'             | 'text/css'            | '05'     | '.css'
+            'all'          | false            | 'html'             | 'text/css'            | '06'     | '.css'
+            null           | false            | null               | 'text/html'           | '07'     | ''
+            ''             | false            | null               | 'text/html'           | '08'     | ''
+            'unknown'      | false            | null               | 'text/plain'          | '09'     | ''
     }
 }
 

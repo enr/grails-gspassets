@@ -1,19 +1,31 @@
 package com.github.enr.gspassets
 
 import org.apache.commons.io.FilenameUtils
-import org.codehaus.groovy.grails.web.mime.MimeType
-import org.codehaus.groovy.grails.web.mime.MimeUtility
+// import org.codehaus.groovy.grails.web.mime.MimeType
+// import org.codehaus.groovy.grails.web.mime.MimeUtility
 import org.springframework.beans.factory.InitializingBean
 
 class GspassetsController implements InitializingBean {
     
+    private static final String MODEL_PARAMS_PREFIX = '_g_'
     private static final String DEFAULT_RESPONSE = 'text'
     private static final String DEFAULT_MIME_TYPE = 'text/plain'
-    
-    MimeUtility grailsMimeUtility
+    private static final Map<String, String> MIME_TYPES = [ html: 'text/html',
+                                                            xml: 'text/xml',
+                                                            text: 'text/plain',
+                                                            js: 'text/javascript',
+                                                            rss: 'application/rss+xml',
+                                                            atom: 'application/atom+xml',
+                                                            css: 'text/css',
+                                                            csv: 'text/csv',
+                                                            all: '*/*',   // */
+                                                            json: 'application/json' ]
+
+    //MimeUtility grailsMimeUtility
     def grailsApplication
 
     String defaultResponse
+
     boolean skipRequestFormatAll
 
     public void afterPropertiesSet() {
@@ -22,26 +34,56 @@ class GspassetsController implements InitializingBean {
     }
 
     def serve() {
-        println ""
         def assetId = params.assetId
+        log.debug "assetId=${assetId} defaultResponse=${defaultResponse} skipRequestFormatAll=${skipRequestFormatAll}"
         if (!assetId) {
             response.status = 404
             return
         }
         def requestFormat = (skipRequestFormatAll && request.format == 'all') ? '' : request.format
         def contentType = resolveContentType(request.forwardURI, requestFormat, defaultResponse)
-        render view:assetId, contentType:contentType // NOT YET IMPLEMENTED, model:params
+        log.debug "contentType=${contentType}"
+        //['assetId'].each { params.remove it }
+        //params.keySet().asList().each { if (!it.startsWith(MODEL_PARAMS_PREFIX)) params.remove(it) }
+        def model = [:]
+        params.each { k, v ->
+            if (k.startsWith(MODEL_PARAMS_PREFIX)) {
+                model[(k - MODEL_PARAMS_PREFIX)] = v
+            }
+        }
+        render view:assetId, contentType:contentType, model:model
     }
 
     private String resolveContentType(uri, requestFormat, defaultResponse) {
-        def ct = contentTypeForUri(uri)
-        if (ct != null) {
+        def ct = MIME_TYPES.get(FilenameUtils.getExtension(uri))
+        if (ct) {
             return ct
         }
+        ct = MIME_TYPES.get(requestFormat)
+        if (ct) {
+            return ct
+        }
+        return (MIME_TYPES.get(defaultResponse) ?: DEFAULT_MIME_TYPE)
+    }
+
+    /*
+    private String resolveContentType(uri, requestFormat, defaultResponse) {
+        log.error "uri=${uri} requestFormat=${requestFormat}"
+        def ct = contentTypeForUri(uri)
+        log.error "1.ct=${ct}"
+        if (ct != null) {
+            log.error "2.ct=${ct}"
+            return ct
+        }
+        //                                       grails.mime.types
         def mimeTypes = grailsApplication.config.grails.mime.types
+        log.error "                          mimeTypes=${mimeTypes}"
+        log.error "grailsMimeUtility.getKnownMimeTypes=${grailsMimeUtility.getKnownMimeTypes()}"
         if (requestFormat != null) {
             ct = mimeTypes[requestFormat]
+            log.error "3.ct=${ct}"
             if (ct != null) {
+                log.error "4.ct=${ct}"
                 return toContentType(ct)
             }
         }
@@ -50,6 +92,7 @@ class GspassetsController implements InitializingBean {
     
     private String contentTypeForUri(uri) {
         MimeType mimeType = grailsMimeUtility.getMimeTypeForExtension(FilenameUtils.getExtension(uri));
+        log.error "mimeType=${mimeType}"
         if (mimeType) {
             return mimeType.name
         }
@@ -62,5 +105,6 @@ class GspassetsController implements InitializingBean {
         }
         return mime ? "${mime}" : ''
     }
+    */
 
 }

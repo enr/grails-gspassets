@@ -23,7 +23,7 @@ Create your views in `grails-app/views/gspassets`.
 
 You can use a 2 dots extension (eg `.css.gsp`) to have file names ending in the canonical manner.
 
-A sample view, for a dynamic css file named dynamic.css.gsp using the "famfamfam" tag library:
+A sample view, for a dynamic css file named `mydynamicstyle.css.gsp` using the "famfamfam" tag library:
 
 ```css
     span.my-class {
@@ -41,16 +41,22 @@ Now you can include the file:
 The response contentType resolved in this way:
 
 - if the requested asset has a known extension the content type will be the default for that extension.
-  Content types are taken from the Grails configuration `grails.mime.types`.
+  Content types are mainly taken from the Grails configuration `grails.mime.types`.
   So, the request for `/assets/mystyle.css` will be resolved as the view `gspassets/mystyle.css.gsp` with content type `text/css`
   
 - if the asset has no extension (or an unknown one) the content type will be the type specified in `request.format` (if this is other than "all")
 
 - if `request.format` is "all" and the configuration data `skipRequestFormatAll` is set to false, content type will be `"*/*"`
 
-- if `grails.plugins.gspassets.defaultResponse` is set, content type will be the default for that key in the Grails configuration `grails.mime.types`.
+- if `grails.plugins.gspassets.defaultResponse` is set, content type will be the default for that key in the controller's myme types map
 
 - finally, if none of the above conditions are verified, content type will default to `"text/plain"`
+
+
+Params
+------
+
+You can pass params to your views, just give them a name starting with "_g_"; ie calling an asset adding `?_g_myparam=42` to the url, will allow the view to use the variable `${myparam}`.
 
 
 Configuration

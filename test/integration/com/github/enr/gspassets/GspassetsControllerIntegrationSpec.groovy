@@ -4,9 +4,9 @@ import grails.plugin.spock.IntegrationSpec
 
 import spock.lang.*
 
-import org.codehaus.groovy.grails.commons.DefaultGrailsApplication
-import org.codehaus.groovy.grails.plugins.web.mimes.MimeTypesFactoryBean
-import org.codehaus.groovy.grails.web.mime.DefaultMimeUtility
+// import org.codehaus.groovy.grails.commons.DefaultGrailsApplication
+// import org.codehaus.groovy.grails.plugins.web.mimes.MimeTypesFactoryBean
+// import org.codehaus.groovy.grails.web.mime.DefaultMimeUtility
 
 @Unroll
 class GspassetsControllerIntegrationSpec extends IntegrationSpec {
@@ -19,6 +19,7 @@ class GspassetsControllerIntegrationSpec extends IntegrationSpec {
      */
     def setup() {
         controller = new GspassetsController()
+        /*
         def ga = new DefaultGrailsApplication()
         ga.config.grails.mime.types = [ html : ['text/html','application/xhtml+xml'],
                                         xml  : ['text/xml', 'application/xml'],
@@ -28,7 +29,7 @@ class GspassetsControllerIntegrationSpec extends IntegrationSpec {
                                         atom : 'application/atom+xml',
                                         css  : 'text/css',
                                         csv  : 'text/csv',
-                                        all  : '*/*',
+                                        all  : '* /*',
                                         json : ['application/json','text/json']
                                       ]
         final factory = new MimeTypesFactoryBean(grailsApplication: ga)
@@ -37,9 +38,10 @@ class GspassetsControllerIntegrationSpec extends IntegrationSpec {
         def mimeUtility = new DefaultMimeUtility(mimeTypes)
         controller.grailsApplication = ga
         controller.grailsMimeUtility = mimeUtility
+        */
     }
     
-    def "should solve view and mime type from extension"() {
+    def "should solve view and mime type #response_content_type from extension #extension"() {
         given:
             controller.params.assetId = "test_01.${extension}"
             controller.request.forwardURI = "test_01.${extension}"
@@ -56,7 +58,7 @@ class GspassetsControllerIntegrationSpec extends IntegrationSpec {
             'json'            | 'application/json'
     }
     
-    def "should solve view and mime type from request format"() {
+    def "should solve view and mime type #response_content_type from request format #request_format"() {
         given:
             controller.request.format = "${request_format}"
             controller.params.assetId = 'test_02'
@@ -94,7 +96,19 @@ class GspassetsControllerIntegrationSpec extends IntegrationSpec {
             controller.response.status == 404
     }
 
-    def "#asset_id : should serve #response_content_type"() {
+    def "should pass prefixed params to model"() {
+        given:
+            controller.params.assetId = 'asset'
+            controller.params._g_myparam = 'test'
+        when:
+            controller.serve()
+        then:
+            controller.modelAndView.viewName == "/gspassets/asset"
+            controller.modelAndView.model.myparam == 'test'
+            controller.modelAndView.model.assetId == null
+    }
+
+    def "#asset_id#ext : should serve #response_content_type"() {
         given:
             controller.request.format = request_format
             controller.request.forwardURI = "${asset_id}${ext}"
@@ -114,5 +128,8 @@ class GspassetsControllerIntegrationSpec extends IntegrationSpec {
             'all'          | false            | null               | '*/*'                 | '04'     | ''
             'all'          | true             | 'html'             | 'text/css'            | '05'     | '.css'
             'all'          | false            | 'html'             | 'text/css'            | '06'     | '.css'
+            null           | false            | null               | 'text/html'           | '07'     | ''
+            ''             | false            | null               | 'text/html'           | '08'     | ''
+            'unknown'      | false            | null               | 'text/plain'          | '09'     | ''
     }
 }
