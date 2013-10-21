@@ -1,5 +1,9 @@
+
 grails.project.work.dir = 'target'
 
+grails.project.target.level = 1.6
+
+grails.project.dependency.resolver = "maven"
 grails.project.dependency.resolution = {
     // inherit Grails' default dependencies
     inherits("global") {}
@@ -10,17 +14,9 @@ grails.project.dependency.resolution = {
         mavenCentral()
     }
 
-    dependencies {
-        test "org.spockframework:spock-grails-support:0.7-groovy-2.0"
-    }
-
     plugins {
-        build(':release:2.2.0', ':rest-client-builder:1.0.3') {
+        build(":release:3.0.1", ":rest-client-builder:2.0.0") {
             export = false
-        }
-        test(":spock:0.7") {
-            export = false
-            exclude "spock-grails-support"
         }
     }
 }

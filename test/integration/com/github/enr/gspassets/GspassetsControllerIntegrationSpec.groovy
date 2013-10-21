@@ -1,7 +1,5 @@
 package com.github.enr.gspassets
 
-import grails.plugin.spock.IntegrationSpec
-
 import spock.lang.*
 
 // import org.codehaus.groovy.grails.commons.DefaultGrailsApplication
@@ -9,7 +7,7 @@ import spock.lang.*
 // import org.codehaus.groovy.grails.web.mime.DefaultMimeUtility
 
 @Unroll
-class GspassetsControllerIntegrationSpec extends IntegrationSpec {
+class GspassetsControllerIntegrationSpec extends Specification {
   
     GspassetsController controller
 
